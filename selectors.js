@@ -1,5 +1,6 @@
 const PAGE = {
-  CRUMB: "#breadcrumb > span:nth-child(3) > a"
+  CRUMB: "#breadcrumb > span:nth-child(3) > a",
+  CRUMBS: "#breadcrumb span"
 };
 
 const META = {

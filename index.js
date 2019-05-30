@@ -1,5 +1,6 @@
 const fs = require("fs").promises;
 const fspath = require("path");
+const dotenv = require("dotenv");
 const { URLSearchParams } = require("url");
 
 const nodeFetch = require("node-fetch");
@@ -12,7 +13,7 @@ const SELECTORS = require("./selectors");
 const PHEKB_BASE = "https://phekb.org";
 const PHENOTYPE_BASE = `${PHEKB_BASE}/phenotype`;
 const START_PHENOTYPE_ID = 8; //170;
-const END_PHENOTYPE_ID = 88;
+const END_PHENOTYPE_ID = 2000;
 
 const ensureDirExists = path => {
   return fs.mkdir(fspath.dirname(path), { recursive: true });
@@ -59,11 +60,12 @@ const getCSL = pmid => {
   return fetch(url).then(res => res.json());
 };
 
-const buildMeta = page => {
+const buildMeta = ({ page, url }) => {
   const meta = {};
   const t = text(page);
   const ta = textArray(page);
 
+  meta.url = url;
   meta.name = t(SELECTORS.META.NAME);
   meta.slug = slugify(meta.name, { remove: /[*+~.()'"!:@]/g, lower: true });
   meta.id = t(SELECTORS.META.ID);
@@ -125,8 +127,12 @@ const getPhenotype = id => {
   return fetchPhenotype(id).then(html => {
     const page = cheerio.load(html);
 
-    if (page(SELECTORS.PAGE.CRUMB).text() === "Phenotypes") {
-      return Promise.resolve(page);
+    // Must have three breadcrumbs, and the middle one must be "Phenotypes"
+    if (
+      page(SELECTORS.PAGE.CRUMBS).length == 3 &&
+      page(SELECTORS.PAGE.CRUMB).text() === "Phenotypes"
+    ) {
+      return Promise.resolve({ page, url: `${PHENOTYPE_BASE}/${id}` });
     }
 
     return Promise.reject("Not a phenotype");
@@ -137,13 +143,15 @@ const stepReject = msg => err => {
   console.log(`${msg}:`, err);
 };
 
-const scrape = id => {
-  getPhenotype(id)
+const scrape = async id => {
+  return getPhenotype(id)
     .then(buildMeta, stepReject(`Failed to scrape phenotype ${id}`))
     .then(page => console.log(`Successfully scraped ${id}`));
 };
 
 const main = async () => {
+  dotenv.config();
+
   const user = process.env.PHEKB_USER;
   const pass = process.env.PHEKB_PASS;
 
@@ -157,7 +165,7 @@ const main = async () => {
   await login(user, pass);
 
   for (let i = START_PHENOTYPE_ID; i < END_PHENOTYPE_ID; i++) {
-    scrape(i);
+    await scrape(i);
   }
 };
 
