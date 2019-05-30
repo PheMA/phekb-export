@@ -9,6 +9,7 @@ const cheerio = require("cheerio");
 const slugify = require("slugify");
 
 const SELECTORS = require("./selectors");
+const phenotypeIds = require("./phekb-phenotypes-calculated.json");
 
 const PHEKB_BASE = "https://phekb.org";
 const PHENOTYPE_BASE = `${PHEKB_BASE}/phenotype`;
@@ -164,9 +165,9 @@ const main = async () => {
 
   await login(user, pass);
 
-  for (let i = START_PHENOTYPE_ID; i < END_PHENOTYPE_ID; i++) {
-    await scrape(i);
-  }
+  phenotypeIds.ids.forEach(async id => {
+    await scrape(id);
+  });
 };
 
 main();
