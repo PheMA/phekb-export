@@ -9,10 +9,14 @@ const META = {
   NAME: "#page-title",
   STATUS:
     "article > div > div.grid-6 > div.field.field-name-field-p-status.field-type-taxonomy-term-reference.field-label-above > div.field-items > div > a",
+  COLLABORATION_LIST:
+    "article > div > div.grid-6 > div.field.field-name-field-p-collab.field-type-list-boolean.field-label-hidden > div > div",
   TYPE:
     "article > div > div.grid-6 > div.field.field-name-field-pgx-type.field-type-taxonomy-term-reference.field-label-above > div.field-items > div > a",
   AUTHORS:
     "article > div > div.grid-6 > div.field.field-name-field-author.field-type-text.field-label-inline.clearfix > div.field-items > div",
+  CONTACT_AUTHOR:
+    "article > div > div.grid-6 > div.field.field-name-field-contact-author.field-type-entityreference.field-label-above > div.field-items > div > a",
   DATA_MODALITIES:
     "article > div > div.grid-6 > div.field.field-name-field-class.field-type-taxonomy-term-reference.field-label-above > div.field-items > div > a",
   CONTACT:

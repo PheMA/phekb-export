@@ -70,13 +70,19 @@ const buildMeta = ({ page, url }) => {
   meta.name = t(SELECTORS.META.NAME);
   meta.slug = slugify(meta.name, { remove: /[*+~.()'"!:@]/g, lower: true });
   meta.id = t(SELECTORS.META.ID);
-  meta.type = t(SELECTORS.META.TYPE);
+  meta.type = ta(SELECTORS.META.TYPE);
+  meta.status = t(SELECTORS.META.STATUS);
+  meta.collaboration_list = t(SELECTORS.META.COLLABORATION_LIST).startsWith(
+    "List"
+  );
 
   meta.authors = t(SELECTORS.META.AUTHORS)
     .replace("and ", ",")
     .split(",")
     .map(s => s.trim())
     .filter(s => !!s);
+
+  meta.contact_author = t(SELECTORS.META.CONTACT_AUTHOR);
 
   meta.age = ta(SELECTORS.META.AGE);
   meta.data_modalities = ta(SELECTORS.META.DATA_MODALITIES);
@@ -92,7 +98,9 @@ const buildMeta = ({ page, url }) => {
 
   meta.files = files(page)(SELECTORS.META.FILES);
 
-  const filename = `./data/${meta.slug}/${meta.slug}.${meta.id}.json`;
+  const filename = `./data/${meta.id}.${meta.slug}/${meta.id}.${
+    meta.slug
+  }.json`;
 
   writeFile(filename, JSON.stringify(meta, null, 2))
     .then(() => console.log(`Successfully wrote ${filename}`))
