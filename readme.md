@@ -26,5 +26,8 @@ PHEKB_PASS=s3cretp4ss
 ## Run
 
 ```sh
-yarn start
+yarn run update-data
 ```
+
+:bulb: This will delete your local data and generate a fresh copy by scraping
+PheKB.
