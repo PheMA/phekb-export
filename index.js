@@ -61,49 +61,67 @@ const getCSL = pmid => {
   return fetch(url).then(res => res.json());
 };
 
-const buildMeta = ({ page, url }) => {
-  const meta = {};
+const buildDataDictionaries = ({ page, phenotype }) => {
+  phenotype.data_dictionaries = files(page)(
+    SELECTORS.DATA_DICTIONARIES.ALL_FILE_LINKS
+  );
+
+  return Promise.resolve(phenotype);
+};
+
+const buildPhenotype = ({ page, url }) => {
+  const phenotype = {};
   const t = text(page);
   const ta = textArray(page);
 
-  meta.url = url;
-  meta.name = t(SELECTORS.META.NAME);
-  meta.slug = slugify(meta.name, { remove: /[*+~.()'"!:@]/g, lower: true });
-  meta.id = t(SELECTORS.META.ID);
-  meta.type = ta(SELECTORS.META.TYPE);
-  meta.status = t(SELECTORS.META.STATUS);
-  meta.collaboration_list = t(SELECTORS.META.COLLABORATION_LIST).startsWith(
-    "List"
-  );
+  phenotype.url = url;
+  phenotype.name = t(SELECTORS.META.NAME);
+  phenotype.slug = slugify(phenotype.name, {
+    remove: /[*+~.()'"!:@]/g,
+    lower: true
+  });
+  phenotype.id = t(SELECTORS.META.ID);
+  phenotype.type = ta(SELECTORS.META.TYPE);
+  phenotype.status = t(SELECTORS.META.STATUS);
+  phenotype.collaboration_list = t(
+    SELECTORS.META.COLLABORATION_LIST
+  ).startsWith("List");
 
   // Get HTML of summary
-  meta.summary = page(SELECTORS.META.SUMMARY).toString();
+  phenotype.summary = page(SELECTORS.META.SUMMARY).toString();
 
-  meta.authors = t(SELECTORS.META.AUTHORS)
+  phenotype.authors = t(SELECTORS.META.AUTHORS)
     .replace("and ", ",")
     .split(",")
     .map(s => s.trim())
     .filter(s => !!s);
 
-  meta.contact_author = t(SELECTORS.META.CONTACT_AUTHOR);
+  phenotype.contact_author = t(SELECTORS.META.CONTACT_AUTHOR);
 
-  meta.age = ta(SELECTORS.META.AGE);
-  meta.data_modalities = ta(SELECTORS.META.DATA_MODALITIES);
-  meta.gender = ta(SELECTORS.META.GENDER);
-  meta.ethnicity = ta(SELECTORS.META.ETHNICITY);
+  phenotype.age = ta(SELECTORS.META.AGE);
+  phenotype.data_modalities = ta(SELECTORS.META.DATA_MODALITIES);
+  phenotype.gender = ta(SELECTORS.META.GENDER);
+  phenotype.ethnicity = ta(SELECTORS.META.ETHNICITY);
 
-  meta.date_created = page(SELECTORS.META.DATE_CREATED).attr("content");
-  meta.institution = t(SELECTORS.META.INSTITUTION);
-  meta.network_associations = ta(SELECTORS.META.NETWORK_ASSOCIATIONS);
-  meta.owner_groups = ta(SELECTORS.META.OWNER_GROUPS);
-  meta.view_groups = ta(SELECTORS.META.VIEW_GROUPS);
-  meta.race = ta(SELECTORS.META.RACE);
+  phenotype.date_created = page(SELECTORS.META.DATE_CREATED).attr("content");
+  phenotype.institution = t(SELECTORS.META.INSTITUTION);
+  phenotype.network_associations = ta(SELECTORS.META.NETWORK_ASSOCIATIONS);
+  phenotype.owner_groups = ta(SELECTORS.META.OWNER_GROUPS);
+  phenotype.view_groups = ta(SELECTORS.META.VIEW_GROUPS);
+  phenotype.race = ta(SELECTORS.META.RACE);
 
-  meta.files = files(page)(SELECTORS.META.FILES);
+  phenotype.files = files(page)(SELECTORS.META.FILES);
 
-  const filename = `./data/${meta.id}.${meta.slug}/${meta.id}.${meta.slug}.json`;
+  const filename = `./data/${phenotype.id}.${phenotype.slug}/${phenotype.id}.${phenotype.slug}.json`;
 
-  writeFile(filename, JSON.stringify(meta, null, 2))
+  fetchDataDictionaries(page(SELECTORS.PAGE.DATA_DICTIONARIES).attr("href"))
+    .then(
+      html => buildDataDictionaries({ page: cheerio.load(html), phenotype }),
+      stepReject(
+        `Failed to scrape data dictionaries for phenotype ${phenotype.id}`
+      )
+    )
+    .then(phenotype => writeFile(filename, JSON.stringify(phenotype, null, 2)))
     .then(() => console.log(`Successfully wrote ${filename}`))
     .catch(e => console.log(`Error writing ${filename}`, e));
 };
@@ -133,6 +151,10 @@ const fetchPhenotype = id => {
   return fetch(`${PHENOTYPE_BASE}/${id}`).then(res => res.text());
 };
 
+const fetchDataDictionaries = relativeUrl => {
+  return fetch(`${PHEKB_BASE}/${relativeUrl}`).then(res => res.text());
+};
+
 const getPhenotype = id => {
   return fetchPhenotype(id).then(html => {
     const page = cheerio.load(html);
@@ -155,7 +177,7 @@ const stepReject = msg => err => {
 
 const scrape = async id => {
   return getPhenotype(id)
-    .then(buildMeta, stepReject(`Failed to scrape phenotype ${id}`))
+    .then(buildPhenotype, stepReject(`Failed to scrape phenotype ${id}`))
     .then(page => console.log(`Successfully scraped ${id}`));
 };
 

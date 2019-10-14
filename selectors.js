@@ -1,6 +1,8 @@
 const PAGE = {
   CRUMB: "#breadcrumb > span:nth-child(3) > a",
-  CRUMBS: "#breadcrumb span"
+  CRUMBS: "#breadcrumb span",
+
+  DATA_DICTIONARIES: "div.tabs.clearfix > ul > li:nth-child(2) > a"
 };
 
 const META = {
@@ -46,7 +48,13 @@ const META = {
     "div.field.field-name-body.field-type-text-with-summary.field-label-hidden"
 };
 
+const DATA_DICTIONARIES = {
+  ALL: "form",
+  ALL_FILE_LINKS: "div.file_link a"
+};
+
 module.exports = {
   PAGE,
-  META
+  META,
+  DATA_DICTIONARIES
 };
