@@ -41,7 +41,9 @@ const META = {
   GENDER:
     "article > div > div.grid-6 > div.field.field-name-field-gender.field-type-taxonomy-term-reference.field-label-above > div.field-items > div > a",
   ETHNICITY:
-    "article > div > div.grid-6 > div.field.field-name-field-ethnicity.field-type-taxonomy-term-reference.field-label-above > div.field-items > div > a"
+    "article > div > div.grid-6 > div.field.field-name-field-ethnicity.field-type-taxonomy-term-reference.field-label-above > div.field-items > div > a",
+  SUMMARY:
+    "div.field.field-name-body.field-type-text-with-summary.field-label-hidden"
 };
 
 module.exports = {

@@ -14,7 +14,7 @@ const phenotypeIds = require("./phekb-phenotypes-calculated.json");
 const PHEKB_BASE = "https://phekb.org";
 const PHENOTYPE_BASE = `${PHEKB_BASE}/phenotype`;
 const START_PHENOTYPE_ID = 8; //170;
-const END_PHENOTYPE_ID = 2000;
+const END_PHENOTYPE_ID = 20; //2000;
 
 const ensureDirExists = path => {
   return fs.mkdir(fspath.dirname(path), { recursive: true });
@@ -76,6 +76,9 @@ const buildMeta = ({ page, url }) => {
     "List"
   );
 
+  // Get HTML of summary
+  meta.summary = page(SELECTORS.META.SUMMARY).toString();
+
   meta.authors = t(SELECTORS.META.AUTHORS)
     .replace("and ", ",")
     .split(",")
@@ -98,9 +101,7 @@ const buildMeta = ({ page, url }) => {
 
   meta.files = files(page)(SELECTORS.META.FILES);
 
-  const filename = `./data/${meta.id}.${meta.slug}/${meta.id}.${
-    meta.slug
-  }.json`;
+  const filename = `./data/${meta.id}.${meta.slug}/${meta.id}.${meta.slug}.json`;
 
   writeFile(filename, JSON.stringify(meta, null, 2))
     .then(() => console.log(`Successfully wrote ${filename}`))
