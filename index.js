@@ -13,8 +13,6 @@ const phenotypeIds = require("./phekb-phenotypes-calculated.json");
 
 const PHEKB_BASE = "https://phekb.org";
 const PHENOTYPE_BASE = `${PHEKB_BASE}/phenotype`;
-const START_PHENOTYPE_ID = 8; //170;
-const END_PHENOTYPE_ID = 20; //2000;
 
 const ensureDirExists = path => {
   return fs.mkdir(fspath.dirname(path), { recursive: true });
@@ -69,7 +67,7 @@ const buildDataDictionaries = ({ page, phenotype }) => {
   return Promise.resolve(phenotype);
 };
 
-const buildPhenotype = ({ page, url }) => {
+const buildPhenotype = async ({ page, url }) => {
   const phenotype = {};
   const t = text(page);
   const ta = textArray(page);
@@ -109,6 +107,15 @@ const buildPhenotype = ({ page, url }) => {
   phenotype.owner_groups = ta(SELECTORS.META.OWNER_GROUPS);
   phenotype.view_groups = ta(SELECTORS.META.VIEW_GROUPS);
   phenotype.race = ta(SELECTORS.META.RACE);
+
+  phenotype.suggested_citation = t(SELECTORS.META.SUGGESTED_CITATION);
+
+  const references = [];
+  ta(SELECTORS.META.PUBMED_REFERENCES).forEach(pmid => {
+    references.push(getCSL(pmid));
+  });
+
+  phenotype.references = await Promise.all(references);
 
   phenotype.files = files(page)(SELECTORS.META.FILES);
 

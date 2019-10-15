@@ -35,7 +35,7 @@ const META = {
     "article > div > div.grid-6 > div.field.field-name-field-owner-pgroup.field-type-taxonomy-term-reference.field-label-above > div.field-items > div > a",
   VIEW_GROUPS:
     "article > div > div.grid-6 > div.field.field-name-field-view-pgroup.field-type-taxonomy-term-reference.field-label-above > div.field-items > div.field-item > a",
-  CITATION: "",
+  SUGGESTED_CITATION: "div.field-phekb-citation > div",
   AGE:
     "article > div > div.grid-6 > div.field.field-name-field-ages.field-type-taxonomy-term-reference.field-label-above > div.field-items > div > a",
   RACE:
@@ -45,7 +45,8 @@ const META = {
   ETHNICITY:
     "article > div > div.grid-6 > div.field.field-name-field-ethnicity.field-type-taxonomy-term-reference.field-label-above > div.field-items > div > a",
   SUMMARY:
-    "div.field.field-name-body.field-type-text-with-summary.field-label-hidden"
+    "div.field.field-name-body.field-type-text-with-summary.field-label-hidden",
+  PUBMED_REFERENCES: "span.reference"
 };
 
 const DATA_DICTIONARIES = {
