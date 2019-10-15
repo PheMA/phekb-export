@@ -6,7 +6,7 @@
     {
       "label": "Run",
       "type": "shell",
-      "command": "yarn start",
+      "command": "yarn run viewer",
       "group": "build",
       "presentation": {
         "reveal": "always",
