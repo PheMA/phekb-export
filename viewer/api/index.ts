@@ -1,15 +1,30 @@
 const fs = require("fs").promises;
 
 const express = require("express");
+const cors = require("cors");
 
 const app = express();
 const port = 3000;
 
+app.use(cors());
+
+interface PhenotypeLink {
+  id: number;
+  slug: string;
+  path: string; // Should be (relative) URL
+}
+
+interface PhenotypesResponse {
+  total?: number;
+  phenotypes?: PhenotypeLink[];
+}
+
 app.get("/phenotype", (req, res) => {
-  const response = {};
+  let response: PhenotypesResponse = { total: undefined, phenotypes: [] };
+
   fs.readdir("data").then(listing => {
     response.total = listing.length;
-    const all = [];
+    const all: PhenotypeLink[] = [];
 
     listing.forEach(item => {
       let [id, slug] = item.split(".");

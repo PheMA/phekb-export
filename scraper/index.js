@@ -75,7 +75,7 @@ const buildPhenotype = async ({ page, url }) => {
   phenotype.url = url;
   phenotype.name = t(SELECTORS.META.NAME);
   phenotype.slug = slugify(phenotype.name, {
-    remove: /[*+~.()'"!:@]/g,
+    remove: /[*+~.()'"!:@\/]/g,
     lower: true
   });
   phenotype.id = t(SELECTORS.META.ID);
