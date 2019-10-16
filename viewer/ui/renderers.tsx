@@ -1,5 +1,5 @@
-import React from "react";
-import { Tooltip } from "@blueprintjs/core";
+import React, { useState } from "react";
+import { Tooltip, Button, Classes, Dialog } from "@blueprintjs/core";
 import { Cell } from "@blueprintjs/table";
 
 const id = (phenotypes: Object[], field: string) => (rowIndex: number) => {
@@ -43,9 +43,47 @@ const stringArray = (phenotypes: Object[], field: string) => (
   );
 };
 
+const Summary = props => {
+  const [visible, setVisible] = useState(false);
+
+  return (
+    <React.Fragment>
+      <Button
+        className="bp3-minimal"
+        text="Show summary"
+        onClick={() => setVisible(true)}
+      />
+
+      <Dialog
+        icon="info-sign"
+        title={props.title}
+        isOpen={visible}
+        onClose={() => setVisible(false)}
+      >
+        <div
+          className={Classes.DIALOG_BODY}
+          dangerouslySetInnerHTML={{ __html: props.summary }}
+        />
+      </Dialog>
+    </React.Fragment>
+  );
+};
+
+const summary = (phenotypes: Object[], field: string) => (rowIndex: number) => {
+  return (
+    <Cell>
+      <Summary
+        summary={phenotypes[rowIndex].summary}
+        title={phenotypes[rowIndex].name}
+      />
+    </Cell>
+  );
+};
+
 module.exports = {
   id,
   string,
   stringArray,
-  boolean
+  boolean,
+  summary
 };

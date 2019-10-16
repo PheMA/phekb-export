@@ -48,6 +48,10 @@ const App = () => {
       <Column name="ID" cellRenderer={renderers.id(phenotypes, "id")} />
       <Column name="Name" cellRenderer={renderers.string(phenotypes, "name")} />
       <Column
+        name="Summary"
+        cellRenderer={renderers.summary(phenotypes, "summary")}
+      />
+      <Column
         name="Status"
         cellRenderer={renderers.string(phenotypes, "status")}
       />
@@ -70,6 +74,10 @@ const App = () => {
       <Column
         name="Data Models"
         cellRenderer={renderers.stringArray(phenotypes, "data_models")}
+      />
+      <Column
+        name="Race"
+        cellRenderer={renderers.stringArray(phenotypes, "race")}
       />
     </Table>
   );
