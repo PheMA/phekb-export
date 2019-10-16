@@ -46,7 +46,9 @@ const META = {
     "article > div > div.grid-6 > div.field.field-name-field-ethnicity.field-type-taxonomy-term-reference.field-label-above > div.field-items > div > a",
   SUMMARY:
     "div.field.field-name-body.field-type-text-with-summary.field-label-hidden",
-  PUBMED_REFERENCES: "span.reference"
+  PUBMED_REFERENCES: "span.reference",
+  DATA_MODELS:
+    "article > div > div.grid-6 > div.field-name-field-data-model div.field-item"
 };
 
 const DATA_DICTIONARIES = {

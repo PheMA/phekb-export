@@ -115,6 +115,8 @@ const buildPhenotype = async ({ page, url }) => {
   phenotype.view_groups = ta(SELECTORS.META.VIEW_GROUPS);
   phenotype.race = ta(SELECTORS.META.RACE);
 
+  phenotype.data_models = ta(SELECTORS.META.DATA_MODELS);
+
   phenotype.suggested_citation = t(SELECTORS.META.SUGGESTED_CITATION);
 
   const references = [];
