@@ -88,9 +88,16 @@ const buildPhenotype = async ({ page, url }) => {
   // Get HTML of summary
   phenotype.summary = page(SELECTORS.META.SUMMARY).toString();
 
-  phenotype.authors = t(SELECTORS.META.AUTHORS)
-    .replace("and ", ",")
-    .split(",")
+  const authors = t(SELECTORS.META.AUTHORS).replace("and ", ",");
+
+  let split_char = ",";
+
+  if (authors.includes(";")) {
+    split_char = ";";
+  }
+
+  phenotype.authors = authors
+    .split(split_char)
     .map(s => s.trim())
     .filter(s => !!s);
 
