@@ -41,15 +41,35 @@ const App = () => {
   return (
     <Table
       renderMode={RenderMode.BATCH_ON_UPDATE}
-      defaultRowHeight={40}
+      defaultRowHeight={80}
       enableRowHeader={true}
       numRows={phenotypes.length}
     >
-      <Column name="ID" cellRenderer={renderers.string(phenotypes, "id")} />
+      <Column name="ID" cellRenderer={renderers.id(phenotypes, "id")} />
       <Column name="Name" cellRenderer={renderers.string(phenotypes, "name")} />
+      <Column
+        name="Status"
+        cellRenderer={renderers.string(phenotypes, "status")}
+      />
+      <Column
+        name="Collaboration"
+        cellRenderer={renderers.boolean(phenotypes, "collaboration_list")}
+      />
+      <Column
+        name="Authors"
+        cellRenderer={renderers.stringArray(phenotypes, "authors")}
+      />
       <Column
         name="Type"
         cellRenderer={renderers.stringArray(phenotypes, "type")}
+      />
+      <Column
+        name="Data Modalities"
+        cellRenderer={renderers.stringArray(phenotypes, "data_modalities")}
+      />
+      <Column
+        name="Data Models"
+        cellRenderer={renderers.stringArray(phenotypes, "data_models")}
       />
     </Table>
   );
