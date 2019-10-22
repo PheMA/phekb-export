@@ -1,0 +1,32 @@
+html,
+body,
+#viewer {
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  margin-top: 50px;
+}
+
+.bp3-dialog {
+  width: 800px;
+}
+
+.pkb {
+  &__wrapper {
+    display: flex;
+  }
+
+  &__fileviewer {
+    &-closed {
+      display: none;
+    }
+
+    &-open {
+      width: 800px;
+    }
+  }
+}
