@@ -39,6 +39,29 @@ body {
       margin: 0;
       padding: 0;
     }
+
+    &__text {
+      &__wrapper {
+        height: calc(100% - 50px);
+        width: calc(100% - 5px);
+        overflow: scroll;
+
+        & > pre {
+          width: 100%;
+          height: 100%;
+          margin: 0;
+          border-color: white;
+          border: none;
+          box-shadow: none;
+        }
+      }
+
+      &__content {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+      }
+    }
   }
 
   &__datatable {

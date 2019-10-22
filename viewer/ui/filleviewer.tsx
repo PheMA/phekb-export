@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Navbar,
   NavbarHeading,
@@ -6,7 +6,8 @@ import {
   NavbarDivider,
   Alignment,
   Button,
-  Classes
+  Classes,
+  NonIdealState
 } from "@blueprintjs/core";
 
 const API_ROOT = "http://localhost:3000";
@@ -18,11 +19,37 @@ const PDFViewer = props => {
   return <iframe className="pkb__fileviewer__pdf" src={props.url} />;
 };
 
-const renderFileViewere = fileObject => {
+const TextViewer = props => {
+  const [text, setText] = useState("");
+
+  useEffect(() => {
+    fetch(props.url)
+      .then(res => res.text())
+      .then(text => setText(text));
+  });
+
+  return (
+    <div className="pkb__fileviewer__text__wrapper">
+      <pre className="pkb__fileviewer__text__content bp3-running-text bp3-text-large bp3-code-block">
+        {text}
+      </pre>
+    </div>
+  );
+};
+
+const renderFileViewer = fileObject => {
   if (fileObject.type === "application/pdf") {
     return <PDFViewer url={getUrl(fileObject.url, fileObject.phenotype.id)} />;
+  } else if (fileObject.type === "text/plain") {
+    return <TextViewer url={getUrl(fileObject.url, fileObject.phenotype.id)} />;
   } else {
-    return "Cannot render file";
+    return (
+      <NonIdealState
+        icon="error"
+        title="Unsuppored File Type"
+        description="Cannot render this type of file right now."
+      />
+    );
   }
 };
 
@@ -30,7 +57,6 @@ const FileViewer = props => {
   const { fileObject, setFileObject } = props;
 
   if (!fileObject.url) return <div className="pkb__fileviewer"></div>;
-
   return (
     <div className="pkb__fileviewer">
       <Navbar>
@@ -53,7 +79,7 @@ const FileViewer = props => {
           />
         </NavbarGroup>
       </Navbar>
-      {renderFileViewere(fileObject)}
+      {renderFileViewer(fileObject)}
     </div>
   );
 };
