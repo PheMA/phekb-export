@@ -80,10 +80,47 @@ const summary = (phenotypes: Object[], field: string) => (rowIndex: number) => {
   );
 };
 
+const File = props => {
+  return (
+    <div className="pkb__files">
+      <a href="#" onClick={props.onClick}>
+        {props.filename.replace(/%20/g, " ")}
+      </a>
+    </div>
+  );
+};
+
+// const tmpOnClick = () => console.log("Clicked!");
+
+const files = (phenotypes: Object[], field: string, setFileObject: any) => (
+  rowIndex: number
+) => {
+  return (
+    <Cell>
+      {phenotypes[rowIndex][field].map(file => (
+        <File
+          key={file.url}
+          onClick={() => {
+            setFileObject({
+              phenotype: {
+                id: phenotypes[rowIndex].id,
+                name: phenotypes[rowIndex].name
+              },
+              ...file
+            });
+          }}
+          filename={file.url.split("/").pop()}
+        />
+      ))}
+    </Cell>
+  );
+};
+
 module.exports = {
   id,
   string,
   stringArray,
   boolean,
-  summary
+  summary,
+  files
 };

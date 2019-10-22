@@ -79,11 +79,15 @@ class DataTable extends React.PureComponent {
       this.createCol("ID", renderers.id(phenotypes, "id")),
       this.createCol("Name", renderers.string(phenotypes, "name")),
       this.createCol("Summary", renderers.summary(phenotypes, "summary")),
+      this.createCol(
+        "Files",
+        renderers.files(phenotypes, "files", this.props.setFileObject)
+      ),
       this.createCol("Status", renderers.string(phenotypes, "status")),
       this.createCol("Created", renderers.string(phenotypes, "date_created")),
       this.createCol(
         "Institution",
-        renderers.string(phenotypes, "institution")
+        renderers.stringArray(phenotypes, "institution")
       ),
       this.createCol(
         "Collaboration",
@@ -110,15 +114,17 @@ class DataTable extends React.PureComponent {
     this.buildPhenotypeColumns(phenotypes);
 
     return (
-      <Table
-        renderMode={RenderMode.BATCH_ON_UPDATE}
-        defaultRowHeight={80}
-        enableRowHeader={true}
-        numRows={phenotypes.length}
-      >
-        {this.phenotypeColumns}
-        {this.renderUserColumns(userColumns)}
-      </Table>
+      <div className="pkb__datatable">
+        <Table
+          renderMode={RenderMode.BATCH_ON_UPDATE}
+          defaultRowHeight={80}
+          enableRowHeader={true}
+          numRows={phenotypes.length}
+        >
+          {this.phenotypeColumns}
+          {this.renderUserColumns(userColumns)}
+        </Table>
+      </div>
     );
   }
 }

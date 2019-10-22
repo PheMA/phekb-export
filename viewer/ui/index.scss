@@ -18,9 +18,13 @@ body {
 .pkb {
   &__wrapper {
     display: flex;
+    max-height: 100%;
+    overflow: scroll;
   }
 
   &__fileviewer {
+    display: block;
+
     &-closed {
       display: none;
     }
@@ -28,5 +32,22 @@ body {
     &-open {
       width: 800px;
     }
+
+    &__pdf {
+      width: 100%;
+      height: calc(100% - 50px);
+      margin: 0;
+      padding: 0;
+    }
   }
+
+  &__datatable {
+    max-height: 100%;
+    overflow: scroll;
+  }
+}
+
+.gutter.gutter-horizontal {
+  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==");
+  cursor: col-resize;
 }

@@ -11,6 +11,7 @@ import {
   Button,
   Classes
 } from "@blueprintjs/core";
+import Split from "react-split";
 
 import "./index.scss";
 import DataTable from "./datatable";
@@ -83,7 +84,11 @@ const App = () => {
     userColumnManager.getColumns()
   );
 
-  const [, forceRender] = React.useState();
+  const [, forceRender] = useState();
+
+  const [fileObject, setFileObject] = useState({});
+
+  const split = fileObject.url ? [25, 75] : [0, 100];
 
   return (
     <React.Fragment>
@@ -93,9 +98,10 @@ const App = () => {
           forceRender({});
         }}
       />
-      <div className="pkb__wrapper">
-        <FileViewer filepath={""} />
+      <Split minSize={0} className="pkb__wrapper" sizes={split}>
+        <FileViewer fileObject={fileObject} setFileObject={setFileObject} />
         <DataTable
+          setFileObject={setFileObject}
           phenotypes={phenotypes}
           userColumns={userColumns}
           getColumn={userColumnManager.getColumn.bind(userColumnManager)}
@@ -111,7 +117,7 @@ const App = () => {
             userColumnManager
           )}
         />
-      </div>
+      </Split>
     </React.Fragment>
   );
 };

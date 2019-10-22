@@ -1,4 +1,5 @@
 const fs = require("fs").promises;
+const path = require("path");
 
 const express = require("express");
 const cors = require("cors");
@@ -54,6 +55,25 @@ app.get("/phenotype/:id", function(req, res) {
     fs.readFile(phenotype_path).then(phenotype => {
       res.send(JSON.parse(phenotype));
     });
+  });
+});
+
+app.get("/phenotype/:id/files/:filename", function(req, res) {
+  const pattern = `${req.params.id}.`;
+
+  let directory, filePath;
+  fs.readdir("data").then(listing => {
+    directory = listing.find(item => item.startsWith(pattern));
+
+    const encodedFileName = req.params.filename.replace(/\ /g, "%20");
+
+    // Massive security vulnerability
+    filePath = path.join(
+      __dirname,
+      `../../data/${directory}/files/${encodedFileName}`
+    );
+
+    res.sendFile(filePath);
   });
 });
 
