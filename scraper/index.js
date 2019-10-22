@@ -15,7 +15,9 @@ const PHEKB_BASE = "https://phekb.org";
 const PHENOTYPE_BASE = `${PHEKB_BASE}/phenotype`;
 
 const ensureDirExists = path => {
-  return fs.mkdir(fspath.dirname(path), { recursive: true });
+  return fs
+    .mkdir(fspath.dirname(path), { recursive: true })
+    .catch(e => console.log(`Error creating ${path}`, e));
 };
 
 const writeFile = (path, data) => {
@@ -65,6 +67,33 @@ const buildDataDictionaries = ({ page, phenotype }) => {
   );
 
   return Promise.resolve(phenotype);
+};
+
+const getFiles = async ({ localDir, prefix, urls }) => {
+  return Promise.all(
+    urls.map(url => {
+      console.log(`Downloading ${url}`);
+      return fetch(url).then(res => {
+        const filename = `${localDir}/${prefix}/${url.split("/").pop()}`;
+
+        return ensureDirExists(filename).then(() => {
+          console.log(`Writing ${filename}`);
+
+          const fileStream = require("fs").createWriteStream(filename);
+
+          return new Promise((resolve, reject) => {
+            res.body.pipe(fileStream);
+            res.body.on("error", err => {
+              reject(err);
+            });
+            fileStream.on("finish", function() {
+              resolve();
+            });
+          });
+        });
+      });
+    })
+  );
 };
 
 const buildPhenotype = async ({ page, url }) => {
@@ -121,14 +150,16 @@ const buildPhenotype = async ({ page, url }) => {
 
   const references = [];
   ta(SELECTORS.META.PUBMED_REFERENCES).forEach(pmid => {
-    references.push(getCSL(pmid));
+    references.push(getCSL(pmid.trim()));
   });
 
   phenotype.references = await Promise.all(references);
 
   phenotype.files = files(page)(SELECTORS.META.FILES);
 
-  const filename = `./data/${phenotype.id}.${phenotype.slug}/${phenotype.id}.${phenotype.slug}.json`;
+  const localDir = `./data/${phenotype.id}.${phenotype.slug}`;
+
+  const filename = `${localDir}/${phenotype.id}.${phenotype.slug}.json`;
 
   fetchDataDictionaries(page(SELECTORS.PAGE.DATA_DICTIONARIES).attr("href"))
     .then(
@@ -139,6 +170,28 @@ const buildPhenotype = async ({ page, url }) => {
     )
     .then(phenotype => writeFile(filename, JSON.stringify(phenotype, null, 2)))
     .then(() => console.log(`Successfully wrote ${filename}`))
+    .then(() =>
+      getFiles({
+        localDir,
+        prefix: "files",
+        urls: phenotype.files.map(file => file.url)
+      })
+    )
+    .then(() =>
+      console.log(`Successfully downloaded files for ${phenotype.slug}`)
+    )
+    .then(() =>
+      getFiles({
+        localDir,
+        prefix: "data_dicts",
+        urls: phenotype.data_dictionaries.map(file => file.url)
+      })
+    )
+    .then(() =>
+      console.log(
+        `Successfully downloaded data dictionaries for ${phenotype.slug}`
+      )
+    )
     .catch(e => console.log(`Error writing ${filename}`, e));
 };
 
