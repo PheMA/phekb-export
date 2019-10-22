@@ -138,7 +138,7 @@ const buildPhenotype = async ({ page, url }) => {
   phenotype.ethnicity = ta(SELECTORS.META.ETHNICITY);
 
   phenotype.date_created = page(SELECTORS.META.DATE_CREATED).attr("content");
-  phenotype.institution = t(SELECTORS.META.INSTITUTION);
+  phenotype.institution = ta(SELECTORS.META.INSTITUTION);
   phenotype.network_associations = ta(SELECTORS.META.NETWORK_ASSOCIATIONS);
   phenotype.owner_groups = ta(SELECTORS.META.OWNER_GROUPS);
   phenotype.view_groups = ta(SELECTORS.META.VIEW_GROUPS);
@@ -168,8 +168,6 @@ const buildPhenotype = async ({ page, url }) => {
         `Failed to scrape data dictionaries for phenotype ${phenotype.id}`
       )
     )
-    .then(phenotype => writeFile(filename, JSON.stringify(phenotype, null, 2)))
-    .then(() => console.log(`Successfully wrote ${filename}`))
     .then(() =>
       getFiles({
         localDir,
@@ -177,9 +175,17 @@ const buildPhenotype = async ({ page, url }) => {
         urls: phenotype.files.map(file => file.url)
       })
     )
-    .then(() =>
-      console.log(`Successfully downloaded files for ${phenotype.slug}`)
-    )
+    .then(() => {
+      console.log(`Successfully downloaded files for ${phenotype.slug}`);
+
+      // Cleanup file URLS
+      phenotype.files = phenotype.files.map(file => {
+        return {
+          ...file,
+          url: `/files/${file.url.split("/").pop()}`
+        };
+      });
+    })
     .then(() =>
       getFiles({
         localDir,
@@ -187,11 +193,21 @@ const buildPhenotype = async ({ page, url }) => {
         urls: phenotype.data_dictionaries.map(file => file.url)
       })
     )
-    .then(() =>
+    .then(() => {
       console.log(
         `Successfully downloaded data dictionaries for ${phenotype.slug}`
-      )
-    )
+      );
+
+      // Cleanup data_dict URLS
+      phenotype.data_dictionaries = phenotype.data_dictionaries.map(dict => {
+        return {
+          ...dict,
+          url: `/data_dicts/${dict.url.split("/").pop()}`
+        };
+      });
+    })
+    .then(() => writeFile(filename, JSON.stringify(phenotype, null, 2)))
+    .then(() => console.log(`Successfully wrote ${filename}`))
     .catch(e => console.log(`Error writing ${filename}`, e));
 };
 
