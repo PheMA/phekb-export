@@ -53,6 +53,8 @@ const Header = props => {
   );
 };
 
+const userColumnManager = new UserColumnManager();
+
 const App = () => {
   const [phenotypes, setPhenotypes] = useState([]);
 
@@ -77,16 +79,37 @@ const App = () => {
     fetchPhenotypeList();
   }, []);
 
-  const userColumnManager = new UserColumnManager();
+  const [userColumns, setUserColumns] = useState(
+    userColumnManager.getColumns()
+  );
+
+  const [, forceRender] = React.useState();
 
   return (
     <React.Fragment>
-      <Header addColumn={userColumnManager.addEmptyColumn} />
+      <Header
+        addColumn={() => {
+          userColumnManager.addEmptyColumn();
+          forceRender({});
+        }}
+      />
       <div className="pkb__wrapper">
         <FileViewer filepath={""} />
         <DataTable
           phenotypes={phenotypes}
-          userColumnManager={userColumnManager}
+          userColumns={userColumns}
+          getColumn={userColumnManager.getColumn.bind(userColumnManager)}
+          getCell={userColumnManager.getCell.bind(userColumnManager)}
+          onNameChange={userColumnManager.onNameChange.bind(userColumnManager)}
+          onNameCancel={userColumnManager.onNameCancel.bind(userColumnManager)}
+          onNameConfirm={userColumnManager.onNameConfirm.bind(
+            userColumnManager
+          )}
+          onCellChange={userColumnManager.onCellChange.bind(userColumnManager)}
+          onCellCancel={userColumnManager.onCellCancel.bind(userColumnManager)}
+          onCellConfirm={userColumnManager.onCellConfirm.bind(
+            userColumnManager
+          )}
         />
       </div>
     </React.Fragment>

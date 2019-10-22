@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   Column,
   ColumnHeaderCell,
@@ -16,7 +16,7 @@ class DataTable extends React.PureComponent {
   protected getColumn(columnIndex: number) {
     const offset = this.phenotypeColumns.length;
 
-    return this.props.userColumnManager.getColumn(columnIndex, offset);
+    return this.props.getColumn(columnIndex, offset);
   }
 
   public columnHeaderRenderer = (columnIndex: number) => {
@@ -28,9 +28,9 @@ class DataTable extends React.PureComponent {
         <EditableName
           index={columnIndex - offset}
           name={name == null ? "" : name}
-          onChange={this.props.userColumnManager.onNameChange}
-          onCancel={this.props.userColumnManager.onNameCancel}
-          onConfirm={this.props.userColumnManager.onNameConfirm}
+          onChange={this.props.onNameChange}
+          onCancel={this.props.onNameCancel}
+          onConfirm={this.props.onNameConfirm}
         />
       );
     };
@@ -44,19 +44,16 @@ class DataTable extends React.PureComponent {
 
   protected cellRenderer(rowIndex: number, columnIndex: number) {
     const offset = this.phenotypeColumns.length;
-    const value = this.props.userColumnManager.getCell(
-      columnIndex - offset,
-      rowIndex
-    );
+    const value = this.props.getCell(columnIndex - offset, rowIndex);
 
     return (
       <EditableCell
         columnIndex={columnIndex - offset}
         rowIndex={rowIndex}
         value={value == null ? "" : value}
-        onChange={this.props.userColumnManager.onCellChange}
-        onCancel={this.props.userColumnManager.onCellCancel}
-        onConfirm={this.props.userColumnManager.onCellConfirm}
+        onChange={this.props.onCellChange}
+        onCancel={this.props.onCellCancel}
+        onConfirm={this.props.onCellConfirm}
       />
     );
   }
@@ -108,7 +105,7 @@ class DataTable extends React.PureComponent {
   };
 
   public render() {
-    const { phenotypes, userColumnManager } = this.props;
+    const { phenotypes, userColumns } = this.props;
 
     this.buildPhenotypeColumns(phenotypes);
 
@@ -120,7 +117,7 @@ class DataTable extends React.PureComponent {
         numRows={phenotypes.length}
       >
         {this.phenotypeColumns}
-        {this.renderUserColumns(userColumnManager.getColumns())}
+        {this.renderUserColumns(userColumns)}
       </Table>
     );
   }
