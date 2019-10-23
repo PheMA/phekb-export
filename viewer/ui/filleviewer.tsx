@@ -55,6 +55,7 @@ const CSVViewer = props => {
     return (
       <thead>
         <tr>
+          <th key="number">{"#"}</th>
           {cols.map((column, i) => (
             <th key={`${i}${column}`}>{column}</th>
           ))}
@@ -68,6 +69,7 @@ const CSVViewer = props => {
       <tbody>
         {rows.map((row, i) => (
           <tr key={i}>
+            <td key={`${i}num`}>{i}</td>
             {keys.map((column, i) => (
               <td key={`${i}${row[column]}`}>{row[column]}</td>
             ))}
@@ -130,15 +132,13 @@ const FileViewer = props => {
   return (
     <div className="pkb__fileviewer">
       <Navbar>
-        <NavbarGroup>
-          <NavbarHeading className="bp3-text-overflow-ellipsis">
+        <NavbarGroup className="pkb__fileviewer__names">
+          <NavbarHeading className="pkb__fileviewer__pname bp3-text-overflow-ellipsis">
             {fileObject.phenotype && fileObject.phenotype.name}
           </NavbarHeading>
           <NavbarDivider />
-          <NavbarHeading>
-            <span className="bp3-text-overflow-ellipsis">
-              {fileObject.name}
-            </span>
+          <NavbarHeading className="pkb__fileviewer__fname bp3-text-overflow-ellipsis">
+            {fileObject.name}
           </NavbarHeading>
         </NavbarGroup>
         <NavbarGroup align={Alignment.RIGHT}>
