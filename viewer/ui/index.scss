@@ -22,6 +22,15 @@ body {
     overflow: scroll;
   }
 
+  &__summary {
+  }
+
+  &__editablecell {
+    & > div > div {
+      white-space: pre;
+    }
+  }
+
   &__fileviewer {
     display: block;
 

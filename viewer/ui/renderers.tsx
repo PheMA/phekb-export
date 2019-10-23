@@ -14,6 +14,20 @@ const id = (phenotypes: Object[], field: string) => (rowIndex: number) => {
   );
 };
 
+const name = (phenotypes: Object[], field: string) => (rowIndex: number) => {
+  return (
+    <Cell>
+      <React.Fragment>
+        <Tooltip content={`ID: ${phenotypes[rowIndex].id}`}>
+          <a href={`https://phekb.org/node/${phenotypes[rowIndex].id}`}>
+            {phenotypes[rowIndex].name}
+          </a>
+        </Tooltip>
+      </React.Fragment>
+    </Cell>
+  );
+};
+
 const string = (phenotypes: Object[], field: string) => (rowIndex: number) => {
   return <Cell>{phenotypes[rowIndex][field]}</Cell>;
 };
@@ -49,8 +63,9 @@ const Summary = props => {
   return (
     <React.Fragment>
       <Button
+        icon="document-open"
         className="bp3-minimal"
-        text="Show summary"
+        text="Summary"
         onClick={() => setVisible(true)}
       />
 
@@ -71,7 +86,7 @@ const Summary = props => {
 
 const summary = (phenotypes: Object[], field: string) => (rowIndex: number) => {
   return (
-    <Cell>
+    <Cell className="pkb__summary">
       <Summary
         summary={phenotypes[rowIndex].summary}
         title={phenotypes[rowIndex].name}
@@ -122,5 +137,6 @@ module.exports = {
   stringArray,
   boolean,
   summary,
-  files
+  files,
+  name
 };

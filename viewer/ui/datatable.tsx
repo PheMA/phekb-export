@@ -7,6 +7,7 @@ import {
   Table,
   RenderMode
 } from "@blueprintjs/table";
+import { Intent } from "@blueprintjs/core";
 
 import * as renderers from "./renderers";
 
@@ -46,8 +47,18 @@ class DataTable extends React.PureComponent {
     const offset = this.phenotypeColumns.length;
     const value = this.props.getCell(columnIndex - offset, rowIndex);
 
+    const editableTextProps = {
+      multiline: true,
+      minLines: 4,
+      confirmOnEnterKey: true
+    };
+
     return (
       <EditableCell
+        className="pkb__editablecell"
+        style={{ whiteSpace: "pre" }}
+        intent={Intent.PRIMARY}
+        editableTextProps={editableTextProps}
         columnIndex={columnIndex - offset}
         rowIndex={rowIndex}
         value={value == null ? "" : value}
@@ -76,8 +87,8 @@ class DataTable extends React.PureComponent {
 
   protected buildPhenotypeColumns = phenotypes => {
     this.phenotypeColumns = [
-      this.createCol("ID", renderers.id(phenotypes, "id")), // 0
-      this.createCol("Name", renderers.string(phenotypes, "name")), // 1
+      // this.createCol("ID", renderers.id(phenotypes, "id")), // 0
+      this.createCol("Name", renderers.name(phenotypes, "name")), // 1
       this.createCol("Summary", renderers.summary(phenotypes, "summary")), // 2
       this.createCol(
         "Files",
@@ -116,6 +127,7 @@ class DataTable extends React.PureComponent {
     return (
       <div className="pkb__datatable">
         <Table
+          numFrozenColumns={1}
           renderMode={RenderMode.BATCH_ON_UPDATE}
           defaultRowHeight={80}
           enableRowHeader={true}
