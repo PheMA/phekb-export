@@ -76,35 +76,35 @@ class DataTable extends React.PureComponent {
 
   protected buildPhenotypeColumns = phenotypes => {
     this.phenotypeColumns = [
-      this.createCol("ID", renderers.id(phenotypes, "id")),
-      this.createCol("Name", renderers.string(phenotypes, "name")),
-      this.createCol("Summary", renderers.summary(phenotypes, "summary")),
+      this.createCol("ID", renderers.id(phenotypes, "id")), // 0
+      this.createCol("Name", renderers.string(phenotypes, "name")), // 1
+      this.createCol("Summary", renderers.summary(phenotypes, "summary")), // 2
       this.createCol(
         "Files",
-        renderers.files(phenotypes, "files", this.props.setFileObject)
+        renderers.files(phenotypes, "files", this.props.setFileObject) // 3
       ),
-      this.createCol("Status", renderers.string(phenotypes, "status")),
-      this.createCol("Created", renderers.string(phenotypes, "date_created")),
+      this.createCol("Status", renderers.string(phenotypes, "status")), // 4
+      this.createCol("Created", renderers.string(phenotypes, "date_created")), // 5
       this.createCol(
         "Institution",
-        renderers.stringArray(phenotypes, "institution")
+        renderers.stringArray(phenotypes, "institution") // 6
       ),
       this.createCol(
         "Collaboration",
-        renderers.boolean(phenotypes, "collaboration_list")
+        renderers.boolean(phenotypes, "collaboration_list") // 7
       ),
-      this.createCol("Authors", renderers.stringArray(phenotypes, "authors")),
-      this.createCol("Type", renderers.stringArray(phenotypes, "type")),
+      this.createCol("Authors", renderers.stringArray(phenotypes, "authors")), // 8
+      this.createCol("Type", renderers.stringArray(phenotypes, "type")), // 9
       this.createCol(
         "Data Modalities",
-        renderers.stringArray(phenotypes, "data_modalities")
+        renderers.stringArray(phenotypes, "data_modalities") // 10
       ),
       this.createCol(
         "Data Models",
-        renderers.stringArray(phenotypes, "data_models")
+        renderers.stringArray(phenotypes, "data_models") // 11
       ),
-      this.createCol("Race", renderers.stringArray(phenotypes, "race")),
-      this.createCol("Gender", renderers.stringArray(phenotypes, "gender"))
+      this.createCol("Race", renderers.stringArray(phenotypes, "race")), // 12
+      this.createCol("Gender", renderers.stringArray(phenotypes, "gender")) // 13
     ];
   };
 

@@ -40,6 +40,20 @@ body {
       padding: 0;
     }
 
+    &__doc {
+      width: 100%;
+      height: calc(100% - 50px);
+      margin: 0;
+      padding: 0;
+    }
+
+    &__img {
+      max-width: 100%;
+      max-height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
     &__text {
       &__wrapper {
         height: calc(100% - 50px);

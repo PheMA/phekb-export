@@ -89,13 +89,29 @@ const CSVViewer = props => {
   );
 };
 
+const DocViewer = props => {
+  const src = `https://view.officeapps.live.com/op/embed.aspx?src=${props.url}`;
+
+  return <iframe className="pkb__fileviewer__doc" src={src} />;
+};
+
 const renderFileViewer = fileObject => {
+  const fileUrl = getUrl(fileObject.url, fileObject.phenotype.id);
+
   if (fileObject.type === "application/pdf") {
-    return <PDFViewer url={getUrl(fileObject.url, fileObject.phenotype.id)} />;
+    return <PDFViewer url={fileUrl} />;
   } else if (fileObject.type === "text/plain") {
-    return <TextViewer url={getUrl(fileObject.url, fileObject.phenotype.id)} />;
+    return <TextViewer url={fileUrl} />;
   } else if (fileObject.type === "text/csv") {
-    return <CSVViewer url={getUrl(fileObject.url, fileObject.phenotype.id)} />;
+    return <CSVViewer url={fileUrl} />;
+  } else if (
+    fileObject.type.includes("application/msword") ||
+    fileObject.type.includes("application/vnd")
+  ) {
+    const url = `https://phekb.org/sites/phenotype${fileObject.url}`;
+    return <DocViewer url={url} />;
+  } else if (fileObject.type.startsWith("image/")) {
+    return <img className="pkb__fileviewer__img" src={fileUrl} />;
   } else {
     return (
       <NonIdealState
