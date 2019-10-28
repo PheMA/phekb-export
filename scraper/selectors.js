@@ -1,8 +1,8 @@
 const PAGE = {
   CRUMB: "#breadcrumb > span:nth-child(3) > a",
   CRUMBS: "#breadcrumb span",
-
-  DATA_DICTIONARIES: "div.tabs.clearfix > ul > li:nth-child(2) > a"
+  DATA_DICTIONARIES: "div.tabs.clearfix > ul > li:nth-child(2) > a",
+  IMPLEMENTATIONS: "div.tabs.clearfix > ul > li:nth-child(3) > a"
 };
 
 const META = {
@@ -51,6 +51,15 @@ const META = {
     "article > div > div.grid-6 > div.field-name-field-data-model div.field-item"
 };
 
+const IMPLEMENTATIONS = {
+  SUMMARY: ".implementation_summary",
+  TITLE: ".imp_title",
+  INSTITUTION: ".institution_title",
+  ALGORITHM_TYPE: ".algorithm_type",
+  DATE: ".date",
+  TABLE: ".implementations_table"
+};
+
 const DATA_DICTIONARIES = {
   ALL: "form",
   ALL_FILE_LINKS: "div.file_link a"
@@ -59,5 +68,6 @@ const DATA_DICTIONARIES = {
 module.exports = {
   PAGE,
   META,
-  DATA_DICTIONARIES
+  DATA_DICTIONARIES,
+  IMPLEMENTATIONS
 };

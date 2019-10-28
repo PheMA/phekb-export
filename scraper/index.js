@@ -69,6 +69,42 @@ const buildDataDictionaries = ({ page, phenotype }) => {
   return Promise.resolve(phenotype);
 };
 
+const buildImplementations = ({ page, phenotype }) => {
+  phenotype.implementations = [];
+
+  let impl = {};
+  page(SELECTORS.IMPLEMENTATIONS.SUMMARY)
+    .toArray()
+    .forEach(summary => {
+      impl = {};
+
+      impl.title = page(SELECTORS.IMPLEMENTATIONS.TITLE, summary)
+        .text()
+        .trim();
+      impl.institution = page(SELECTORS.IMPLEMENTATIONS.INSTITUTION, summary)
+        .text()
+        .trim();
+      impl.algorithm_type = page(
+        SELECTORS.IMPLEMENTATIONS.ALGORITHM_TYPE,
+        summary
+      )
+        .text()
+        .trim();
+      impl.date_uploaded = page(SELECTORS.IMPLEMENTATIONS.DATE, summary)
+        .text()
+        .match(/\d.*\d/)[0];
+
+      // TODO (maybe): figure this out
+      impl.case_ppv = null;
+      impl.control_ppv = null;
+      impl.files = [];
+
+      phenotype.implementations.push(impl);
+    });
+
+  return Promise.resolve();
+};
+
 const getFiles = async ({ localDir, prefix, urls }) => {
   return Promise.all(
     urls.map(url => {
@@ -146,7 +182,7 @@ const buildPhenotype = async ({ page, url }) => {
 
   phenotype.data_models = ta(SELECTORS.META.DATA_MODELS);
 
-  phenotype.suggested_citation = t(SELECTORS.META.SUGGESTED_CITATION);
+  phenotype.suggested_citation = t(SELECTORS.META.SUGGESTED_CITATION).trim();
 
   const references = [];
   ta(SELECTORS.META.PUBMED_REFERENCES).forEach(pmid => {
@@ -161,7 +197,7 @@ const buildPhenotype = async ({ page, url }) => {
 
   const filename = `${localDir}/${phenotype.id}.${phenotype.slug}.json`;
 
-  fetchDataDictionaries(page(SELECTORS.PAGE.DATA_DICTIONARIES).attr("href"))
+  fetchRelativeUrl(page(SELECTORS.PAGE.DATA_DICTIONARIES).attr("href"))
     .then(
       html => buildDataDictionaries({ page: cheerio.load(html), phenotype }),
       stepReject(
@@ -206,6 +242,16 @@ const buildPhenotype = async ({ page, url }) => {
         };
       });
     })
+    .then(() => {
+      return fetchRelativeUrl(
+        page(SELECTORS.PAGE.IMPLEMENTATIONS).attr("href")
+      ).then(
+        html => buildImplementations({ page: cheerio.load(html), phenotype }),
+        stepReject(
+          `Failed to scrape implementations for phenotype ${phenotype.id}`
+        )
+      );
+    })
     .then(() => writeFile(filename, JSON.stringify(phenotype, null, 2)))
     .then(() => console.log(`Successfully wrote ${filename}`))
     .catch(e => console.log(`Error writing ${filename}`, e));
@@ -236,7 +282,8 @@ const fetchPhenotype = id => {
   return fetch(`${PHENOTYPE_BASE}/${id}`).then(res => res.text());
 };
 
-const fetchDataDictionaries = relativeUrl => {
+const fetchRelativeUrl = relativeUrl => {
+  console.log(`Fetching ${PHEKB_BASE}/${relativeUrl}`);
   return fetch(`${PHEKB_BASE}/${relativeUrl}`).then(res => res.text());
 };
 
