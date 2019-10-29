@@ -318,6 +318,15 @@ const main = async () => {
 
   const user = process.env.PHEKB_USER;
   const pass = process.env.PHEKB_PASS;
+  const crawl = process.env.PHEKB_CRAWL;
+
+  const PHEKB_CRAWL_START = process.env.PHEKB_CRAWL_START
+    ? parseInt(process.env.PHEKB_CRAWL_START)
+    : 1;
+
+  const PHEKB_CRAWL_END = process.env.PHEKB_CRAWL_END
+    ? parseInt(process.env.PHEKB_CRAWL_END)
+    : 2000;
 
   if (!user || !pass) {
     console.log(
@@ -328,9 +337,15 @@ const main = async () => {
 
   await login(user, pass);
 
-  phenotypeIds.ids.forEach(async id => {
-    await scrape(id);
-  });
+  if (crawl === "true") {
+    for (id = PHEKB_CRAWL_START; id <= PHEKB_CRAWL_END; id++) {
+      await scrape(id);
+    }
+  } else {
+    phenotypeIds.ids.forEach(async id => {
+      await scrape(id);
+    });
+  }
 };
 
 main();

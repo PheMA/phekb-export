@@ -1,5 +1,7 @@
 node_modules
 .env
 data
+data.zip
 .cache
 dist
+.DS_Store
