@@ -90,11 +90,30 @@ const App = () => {
 
   const split = fileObject.url ? [25, 75] : [0, 100];
 
+  const deleteColumn = columnIndex => {
+    userColumnManager.deleteColumn(columnIndex);
+    setUserColumns(userColumnManager.getColumns());
+    forceRender({});
+  };
+
+  const moveColumn = (columnIndex, direction) => {
+    userColumnManager.moveColumn(columnIndex, direction);
+    setUserColumns(userColumnManager.getColumns());
+    forceRender({});
+  };
+
+  const insertColumn = columnIndex => {
+    userColumnManager.insertColumn(columnIndex);
+    setUserColumns(userColumnManager.getColumns());
+    forceRender({});
+  };
+
   return (
     <React.Fragment>
       <Header
         addColumn={() => {
           userColumnManager.addEmptyColumn();
+          setUserColumns(userColumnManager.getColumns());
           forceRender({});
         }}
       />
@@ -104,6 +123,9 @@ const App = () => {
           setFileObject={setFileObject}
           phenotypes={phenotypes}
           userColumns={userColumns}
+          deleteColumn={deleteColumn}
+          insertColumn={insertColumn}
+          moveColumn={moveColumn}
           getColumn={userColumnManager.getColumn.bind(userColumnManager)}
           getCell={userColumnManager.getCell.bind(userColumnManager)}
           onNameChange={userColumnManager.onNameChange.bind(userColumnManager)}

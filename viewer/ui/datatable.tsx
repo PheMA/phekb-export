@@ -7,9 +7,87 @@ import {
   Table,
   RenderMode
 } from "@blueprintjs/table";
-import { Intent } from "@blueprintjs/core";
+import { Intent, Menu, MenuItem, MenuDivider, Alert } from "@blueprintjs/core";
 
 import * as renderers from "./renderers";
+
+const UserColumnMenu = props => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const {
+    deleteColumn,
+    insertColumn,
+    moveColumn,
+    index,
+    offset,
+    count
+  } = props;
+
+  return (
+    <React.Fragment>
+      <Menu>
+        <MenuItem
+          onClick={() => {
+            insertColumn(index - offset);
+          }}
+          icon="add-column-left"
+          text="Insert Left"
+        ></MenuItem>
+        <MenuItem
+          onClick={() => {
+            insertColumn(index - offset + 1);
+          }}
+          icon="add-column-right"
+          text="Insert Right"
+        ></MenuItem>
+        <MenuDivider />
+        <MenuItem
+          onClick={() => {
+            moveColumn(index - offset, -1);
+          }}
+          disabled={index - offset === 0}
+          icon="arrow-left"
+          text="Move Left"
+        ></MenuItem>
+        <MenuItem
+          disabled={index - offset + 1 === count}
+          onClick={() => {
+            moveColumn(index - offset, +1);
+          }}
+          icon="arrow-right"
+          text="Move Right"
+        ></MenuItem>
+        <MenuDivider />
+        <MenuItem
+          icon="trash"
+          text="Delete"
+          intent={Intent.DANGER}
+          onClick={() => setIsOpen(true)}
+          shouldDismissPopover={false}
+        ></MenuItem>
+      </Menu>
+      <Alert
+        cancelButtonText="Cancel"
+        confirmButtonText="Delete"
+        icon="trash"
+        intent={Intent.DANGER}
+        isOpen={isOpen}
+        onCancel={() => {
+          setIsOpen(false);
+        }}
+        onConfirm={() => {
+          setIsOpen(false);
+          deleteColumn(index - offset);
+        }}
+      >
+        <p>
+          Are you sure you want to delete this column? You will not be able to
+          restore it later.
+        </p>
+      </Alert>
+    </React.Fragment>
+  );
+};
 
 class DataTable extends React.PureComponent {
   protected phenotypeColumns: Array<JSX.Element>;
@@ -39,6 +117,16 @@ class DataTable extends React.PureComponent {
       <ColumnHeaderCell
         name={column.name}
         nameRenderer={nameRenderer.bind(this)}
+        menuRenderer={index => (
+          <UserColumnMenu
+            offset={offset}
+            count={this.props.userColumns.length}
+            insertColumn={this.props.insertColumn}
+            deleteColumn={this.props.deleteColumn}
+            moveColumn={this.props.moveColumn}
+            index={index}
+          />
+        )}
       />
     );
   };

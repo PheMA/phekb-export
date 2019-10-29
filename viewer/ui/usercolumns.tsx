@@ -42,6 +42,22 @@ class UserColumnManager {
     return this.columns;
   }
 
+  deleteColumn = (index: number) => {
+    this.columns.splice(index, 1);
+    this.save();
+  };
+
+  insertColumn = (index: number) => {
+    this.columns.splice(index, 0, { name: null, values: [] });
+    this.save();
+  };
+
+  // `direction` should be +1 for right, -1 for left
+  moveColumn = (index: number, direction: number) => {
+    this.columns.splice(index + direction, 0, this.columns.splice(index, 1)[0]);
+    this.save();
+  };
+
   addEmptyColumn = () => {
     this.columns.push({ name: null, values: [] });
     this.save();
