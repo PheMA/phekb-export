@@ -205,6 +205,7 @@ class DataTable extends React.PureComponent {
         "Data Modalities",
         renderers.stringArray(phenotypes, "data_modalities")
       ),
+      this.createCol("Implementations", renderers.implementations(phenotypes)),
       this.createCol(
         "Data Models",
         renderers.stringArray(phenotypes, "data_models")

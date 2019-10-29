@@ -25,6 +25,24 @@ body {
   &__summary {
   }
 
+  &__impl {
+    padding: 10px;
+    display: block;
+
+    &__inst {
+      font-weight: 700;
+    }
+
+    &__ppv {
+      color: gray;
+    }
+
+    &__date {
+      color: gray;
+      font-style: oblique;
+    }
+  }
+
   &__editablecell {
     & > div > div {
       white-space: pre;

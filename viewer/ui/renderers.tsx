@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { Tooltip, Button, Classes, Dialog } from "@blueprintjs/core";
+import {
+  Tooltip,
+  Button,
+  Classes,
+  Dialog,
+  Popover,
+  PopoverInteractionKind
+} from "@blueprintjs/core";
 import { Cell } from "@blueprintjs/table";
 
 const renderEmptyCell = () => <Cell></Cell>;
@@ -172,6 +179,54 @@ const files = (phenotypes: Object[], field: string, setFileObject: any) => (
   );
 };
 
+const implementations = (phenotypes: Object[]) => (rowIndex: number) => {
+  if (
+    phenotypes[rowIndex] === undefined ||
+    phenotypes[rowIndex].implementations === undefined
+  ) {
+    return renderEmptyCell();
+  }
+
+  const content = (inst, type, date) => {
+    return (
+      <div key={`${inst}-${date}`} className="pkb__impl">
+        <div key="inst" className="pkb__impl__inst">
+          {inst}
+        </div>
+        <div key="type" className="pkb__impl__type">
+          {type}
+        </div>
+        <div key="ppv" className="pkb__impl__ppv">
+          Cases PPV: ?, Control PPV: ?
+        </div>
+        <div key="date" className="pkb__impl__date">
+          {date}
+        </div>
+      </div>
+    );
+  };
+
+  return (
+    <Cell>
+      {phenotypes[rowIndex].implementations.map((impl, index) => (
+        <div key={`${impl.institution}-${impl.date_uploaded}`}>
+          {`${index + 1}. `}
+          <Popover
+            interactionKind={PopoverInteractionKind.HOVER}
+            content={content(
+              impl.institution,
+              impl.algorithm_type,
+              impl.date_uploaded
+            )}
+          >
+            <div>{impl.title}</div>
+          </Popover>
+        </div>
+      ))}
+    </Cell>
+  );
+};
+
 module.exports = {
   id,
   string,
@@ -180,5 +235,6 @@ module.exports = {
   summary,
   files,
   name,
-  date
+  date,
+  implementations
 };
