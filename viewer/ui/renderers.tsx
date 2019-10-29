@@ -208,21 +208,50 @@ const implementations = (phenotypes: Object[]) => (rowIndex: number) => {
 
   return (
     <Cell>
-      {phenotypes[rowIndex].implementations.map((impl, index) => (
-        <div key={`${impl.institution}-${impl.date_uploaded}`}>
-          {`${index + 1}. `}
-          <Popover
-            interactionKind={PopoverInteractionKind.HOVER}
-            content={content(
-              impl.institution,
-              impl.algorithm_type,
-              impl.date_uploaded
-            )}
-          >
-            <div>{impl.title}</div>
-          </Popover>
-        </div>
-      ))}
+      <React.Fragment>
+        {phenotypes[rowIndex].implementations.map((impl, index) => (
+          <div key={`${index}`}>
+            {`${index + 1}. `}
+            <Popover
+              interactionKind={PopoverInteractionKind.HOVER}
+              content={content(
+                impl.institution,
+                impl.algorithm_type,
+                impl.date_uploaded
+              )}
+            >
+              <div>{impl.title}</div>
+            </Popover>
+          </div>
+        ))}
+      </React.Fragment>
+    </Cell>
+  );
+};
+
+const references = (phenotypes: Object[]) => (rowIndex: number) => {
+  if (
+    phenotypes[rowIndex] === undefined ||
+    phenotypes[rowIndex].references === undefined
+  ) {
+    return renderEmptyCell();
+  }
+
+  return (
+    <Cell>
+      <React.Fragment>
+        {phenotypes[rowIndex].references.map((ref, index) => (
+          <div key={`${index}`}>
+            {`${index + 1}. `}
+            <a
+              target="_blank"
+              href={`https://www.ncbi.nlm.nih.gov/pubmed/${ref.PMID}`}
+            >
+              {ref.title}
+            </a>
+          </div>
+        ))}
+      </React.Fragment>
     </Cell>
   );
 };
@@ -236,5 +265,6 @@ module.exports = {
   files,
   name,
   date,
-  implementations
+  implementations,
+  references
 };

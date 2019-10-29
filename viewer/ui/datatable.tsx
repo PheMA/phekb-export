@@ -200,11 +200,21 @@ class DataTable extends React.PureComponent {
         renderers.boolean(phenotypes, "collaboration_list")
       ),
       this.createCol("Authors", renderers.stringArray(phenotypes, "authors")),
+      this.createCol("Contact", renderers.string(phenotypes, "contact_author")),
       this.createCol("Type", renderers.stringArray(phenotypes, "type")),
       this.createCol(
         "Data Modalities",
         renderers.stringArray(phenotypes, "data_modalities")
       ),
+      this.createCol(
+        "Networks",
+        renderers.stringArray(phenotypes, "network_associations")
+      ),
+      this.createCol(
+        "Owner",
+        renderers.stringArray(phenotypes, "owner_groups")
+      ),
+      this.createCol("View", renderers.stringArray(phenotypes, "view_groups")),
       this.createCol("Implementations", renderers.implementations(phenotypes)),
       this.createCol(
         "Data Models",
@@ -212,6 +222,8 @@ class DataTable extends React.PureComponent {
       ),
       this.createCol("Race", renderers.stringArray(phenotypes, "race")),
       this.createCol("Gender", renderers.stringArray(phenotypes, "gender"))
+      this.createCol("Citation", renderers.string(phenotypes, "suggested_citation"))
+      this.createCol("References", renderers.references(phenotypes))
     ];
   };
 
