@@ -26,7 +26,7 @@ const cellRenderer = rowIndex => {
 };
 
 const Header = props => {
-  const { addColumn } = props;
+  const { addColumn, setFilter } = props;
 
   return (
     <Navbar fixedToTop={true} className="bp3-dark">
@@ -39,8 +39,11 @@ const Header = props => {
           <input
             className="bp3-input"
             type="search"
-            placeholder="Search [TODO]"
+            placeholder="Search RegEx /ig"
             dir="auto"
+            onChange={e => {
+              setFilter(e.target.value);
+            }}
           />
         </div>
         <Button
@@ -108,9 +111,12 @@ const App = () => {
     forceRender({});
   };
 
+  const [filter, setFilter] = useState("");
+
   return (
     <React.Fragment>
       <Header
+        setFilter={setFilter}
         addColumn={() => {
           userColumnManager.addEmptyColumn();
           setUserColumns(userColumnManager.getColumns());
@@ -120,6 +126,7 @@ const App = () => {
       <Split minSize={0} className="pkb__wrapper" sizes={split}>
         <FileViewer fileObject={fileObject} setFileObject={setFileObject} />
         <DataTable
+          filter={filter}
           setFileObject={setFileObject}
           phenotypes={phenotypes}
           userColumns={userColumns}

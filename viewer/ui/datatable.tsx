@@ -207,19 +207,35 @@ class DataTable extends React.PureComponent {
     ];
   };
 
-  public render() {
-    const { phenotypes, userColumns } = this.props;
+  protected applyFilter(phenotypes, filter) {
+    return phenotypes.filter(phenotype => {
+      let hasMatch = false;
 
-    this.buildPhenotypeColumns(phenotypes);
+      Object.values(phenotype).forEach(value => {
+        if (!!String(value).match(new RegExp(filter, "ig"))) {
+          hasMatch = true;
+        }
+      });
+
+      return hasMatch;
+    });
+  }
+
+  public render() {
+    const { phenotypes, userColumns, filter } = this.props;
+
+    const filtered = filter ? this.applyFilter(phenotypes, filter) : phenotypes;
+
+    this.buildPhenotypeColumns(filtered);
 
     return (
       <div className="pkb__datatable">
         <Table
           numFrozenColumns={1}
-          renderMode={RenderMode.BATCH_ON_UPDATE}
+          // renderMode={RenderMode.NONE}
           defaultRowHeight={80}
           enableRowHeader={true}
-          numRows={phenotypes.length}
+          numRows={filtered.length}
         >
           {this.phenotypeColumns}
           {this.renderUserColumns(userColumns)}

@@ -2,7 +2,13 @@ import React, { useState } from "react";
 import { Tooltip, Button, Classes, Dialog } from "@blueprintjs/core";
 import { Cell } from "@blueprintjs/table";
 
+const renderEmptyCell = () => <Cell></Cell>;
+
 const id = (phenotypes: Object[], field: string) => (rowIndex: number) => {
+  if (phenotypes[rowIndex] === undefined) {
+    return renderEmptyCell();
+  }
+
   return (
     <Cell>
       <React.Fragment>
@@ -15,6 +21,10 @@ const id = (phenotypes: Object[], field: string) => (rowIndex: number) => {
 };
 
 const name = (phenotypes: Object[], field: string) => (rowIndex: number) => {
+  if (phenotypes[rowIndex] === undefined) {
+    return renderEmptyCell();
+  }
+
   return (
     <Cell>
       <React.Fragment>
@@ -29,16 +39,28 @@ const name = (phenotypes: Object[], field: string) => (rowIndex: number) => {
 };
 
 const string = (phenotypes: Object[], field: string) => (rowIndex: number) => {
+  if (phenotypes[rowIndex] === undefined) {
+    return renderEmptyCell();
+  }
+
   return <Cell>{phenotypes[rowIndex][field]}</Cell>;
 };
 
 const boolean = (phenotypes: Object[], field: string) => (rowIndex: number) => {
+  if (phenotypes[rowIndex] === undefined) {
+    return renderEmptyCell();
+  }
+
   return <Cell>{`${phenotypes[rowIndex][field]}`}</Cell>;
 };
 
 const stringArray = (phenotypes: Object[], field: string) => (
   rowIndex: number
 ) => {
+  if (phenotypes[rowIndex] === undefined) {
+    return renderEmptyCell();
+  }
+
   let values = phenotypes[rowIndex][field].map(
     (value: string, index: number) => (
       <div key={value}>
@@ -85,6 +107,10 @@ const Summary = props => {
 };
 
 const summary = (phenotypes: Object[], field: string) => (rowIndex: number) => {
+  if (phenotypes[rowIndex] === undefined) {
+    return renderEmptyCell();
+  }
+
   return (
     <Cell className="pkb__summary">
       <Summary
@@ -110,6 +136,10 @@ const File = props => {
 const files = (phenotypes: Object[], field: string, setFileObject: any) => (
   rowIndex: number
 ) => {
+  if (phenotypes[rowIndex] === undefined) {
+    return renderEmptyCell();
+  }
+
   return (
     <Cell>
       {phenotypes[rowIndex][field].map(file => (
