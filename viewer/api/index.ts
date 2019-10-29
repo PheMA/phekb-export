@@ -58,7 +58,7 @@ app.get("/phenotype/:id", function(req, res) {
   });
 });
 
-app.get("/phenotype/:id/files/:filename", function(req, res) {
+app.get("/phenotype/:id/:type/:filename", function(req, res) {
   const pattern = `${req.params.id}.`;
 
   let directory, filePath;
@@ -70,7 +70,7 @@ app.get("/phenotype/:id/files/:filename", function(req, res) {
     // Massive security vulnerability
     filePath = path.join(
       __dirname,
-      `../../data/${directory}/files/${encodedFileName}`
+      `../../data/${directory}/${req.params.type}/${encodedFileName}`
     );
 
     res.sendFile(filePath);

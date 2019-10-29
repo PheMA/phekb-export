@@ -46,6 +46,14 @@ const string = (phenotypes: Object[], field: string) => (rowIndex: number) => {
   return <Cell>{phenotypes[rowIndex][field]}</Cell>;
 };
 
+const date = (phenotypes: Object[], field: string) => (rowIndex: number) => {
+  if (phenotypes[rowIndex] === undefined) {
+    return renderEmptyCell();
+  }
+
+  return <Cell>{phenotypes[rowIndex][field].substring(0, 10)}</Cell>;
+};
+
 const boolean = (phenotypes: Object[], field: string) => (rowIndex: number) => {
   if (phenotypes[rowIndex] === undefined) {
     return renderEmptyCell();
@@ -136,7 +144,10 @@ const File = props => {
 const files = (phenotypes: Object[], field: string, setFileObject: any) => (
   rowIndex: number
 ) => {
-  if (phenotypes[rowIndex] === undefined) {
+  if (
+    phenotypes[rowIndex] === undefined ||
+    phenotypes[rowIndex][field] === undefined
+  ) {
     return renderEmptyCell();
   }
 
@@ -168,5 +179,6 @@ module.exports = {
   boolean,
   summary,
   files,
-  name
+  name,
+  date
 };
