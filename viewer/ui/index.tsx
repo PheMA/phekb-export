@@ -12,6 +12,7 @@ import {
   Classes
 } from "@blueprintjs/core";
 import Split from "react-split";
+import * as csvWriter from "csv-writer";
 
 import "./index.scss";
 import DataTable from "./datatable";
@@ -26,7 +27,7 @@ const cellRenderer = rowIndex => {
 };
 
 const Header = props => {
-  const { addColumn, setFilter } = props;
+  const { addColumn, setFilter, downloadCsv } = props;
 
   return (
     <Navbar fixedToTop={true} className="bp3-dark">
@@ -52,12 +53,60 @@ const Header = props => {
           icon="add"
           text="Add Column"
         />
+        <Button
+          onClick={downloadCsv}
+          className={Classes.MINIMAL}
+          icon="download"
+          text="Download"
+        />
       </NavbarGroup>
     </Navbar>
   );
 };
 
 const userColumnManager = new UserColumnManager();
+
+const downloadCsv = (phenotypes, userColumns) => {
+  const header = [{ id: "id", title: "ID" }, { id: "name", title: "Name" }];
+  // Add user column headers
+  userColumns.forEach((col, index) => {
+    header.push({ id: `user_${index}`, title: col.name });
+  });
+
+  const csvStringifier = csvWriter.createObjectCsvStringifier({
+    header,
+    alwaysQuote: true
+  });
+
+  const records = [];
+
+  phenotypes.forEach((phenotype, pix) => {
+    const record = {};
+
+    record.id = phenotype.id;
+    record.name = phenotype.name;
+
+    userColumns.forEach((col, index) => {
+      record[`user_${index}`] = col.values[pix]
+        ? col.values[pix].replace(/"/g, '\\"')
+        : "";
+    });
+
+    records.push(record);
+  });
+
+  const csvString = `${csvStringifier.getHeaderString()}${csvStringifier.stringifyRecords(
+    records
+  )}`;
+
+  const now = new Date();
+
+  var hiddenElement = document.createElement("a");
+  hiddenElement.href = "data:text/csv;charset=utf-8," + encodeURI(csvString);
+  hiddenElement.target = "_blank";
+  hiddenElement.download = `phekb-export-custom-columns-${now.toISOString()}.csv`;
+  hiddenElement.click();
+};
 
 const App = () => {
   const [phenotypes, setPhenotypes] = useState([]);
@@ -121,6 +170,9 @@ const App = () => {
           userColumnManager.addEmptyColumn();
           setUserColumns(userColumnManager.getColumns());
           forceRender({});
+        }}
+        downloadCsv={() => {
+          downloadCsv(phenotypes, userColumns);
         }}
       />
       <Split minSize={0} className="pkb__wrapper" sizes={split}>
