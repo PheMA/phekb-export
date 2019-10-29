@@ -4,6 +4,8 @@ Utility that extracts PheKB phenotypes into a semi-structured JSON format, a
 simple API that serves them up, and a UI that can be used to view them and make
 notes.
 
+![](./screenshot.png)
+
 ## Requirements
 
 1. NodeJS 10+
