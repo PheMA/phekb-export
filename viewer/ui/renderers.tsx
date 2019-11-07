@@ -54,7 +54,7 @@ const string = (phenotypes: Object[], field: string) => (rowIndex: number) => {
 };
 
 const date = (phenotypes: Object[], field: string) => (rowIndex: number) => {
-  if (phenotypes[rowIndex] === undefined) {
+  if (phenotypes[rowIndex] === undefined || !phenotypes[rowIndex][field]) {
     return renderEmptyCell();
   }
 
@@ -62,7 +62,7 @@ const date = (phenotypes: Object[], field: string) => (rowIndex: number) => {
 };
 
 const boolean = (phenotypes: Object[], field: string) => (rowIndex: number) => {
-  if (phenotypes[rowIndex] === undefined) {
+  if (phenotypes[rowIndex] === undefined || phenotypes[rowIndex][field]) {
     return renderEmptyCell();
   }
 
