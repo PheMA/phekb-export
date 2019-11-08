@@ -1,5 +1,9 @@
 # PheKB ⬇️ Exporter & 🔬 Viewer
 
+[![PhEMA](./repo-badge.svg)](https://projectphema.org)
+[![Build Status](https://travis-ci.org/PheMA/phekb-export.svg?branch=master)](https://travis-ci.org/PheMA/phekb-export)
+[![Download](https://img.shields.io/badge/dynamic/json.svg?label=latest&query=name&url=https://bintray.com/api/v1/packages/phema/docker/phema-phekb-export-viewer/versions/_latest) ](https://bintray.com/beta/#/phema/docker/phema-phekb-export-viewer?tab=overview)
+
 Utility that extracts PheKB phenotypes into a semi-structured JSON format, a
 simple API that serves them up, and a UI that can be used to view them and make
 notes.
