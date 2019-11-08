@@ -1,4 +1,5 @@
 import "babel-polyfill";
+const dotenv = require("dotenv");
 
 import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
@@ -19,7 +20,7 @@ import DataTable from "./datatable";
 import FileViewer from "./filleviewer";
 import UserColumnManager from "./usercolumns";
 
-const api_prefix = "http://localhost:3000";
+const api_prefix = require("./config.json").PHEKB_API_URL;
 const list_path = `${api_prefix}/phenotype`;
 
 const cellRenderer = rowIndex => {
