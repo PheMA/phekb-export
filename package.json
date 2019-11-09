@@ -6,7 +6,7 @@
     "start": "yarn run viewer",
     "viewer": "concurrently --names \"API,UI\" \"nodemon --watch viewer/api -r ts-node/register viewer/api/index.ts\" \"parcel viewer/ui/index.html\"",
     "update-data": "rimraf ./data && yarn start",
-    "prod": "concurrently --names \"API,UI\" \"nodemon -r ts-node/register viewer/api/index.ts\" \"PHEKB_API_URL=http://api.phekb.phema.science parcel serve viewer/ui/index.html\""
+    "prod": "concurrently --names \"API,UI\" \"nodemon -r ts-node/register viewer/api/index.ts\" \"parcel serve viewer/ui/index.html\""
   },
   "license": "MIT",
   "dependencies": {
