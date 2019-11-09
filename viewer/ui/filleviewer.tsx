@@ -11,7 +11,7 @@ import {
 } from "@blueprintjs/core";
 import CsvToJson from "csvtojson";
 
-const API_ROOT = "http://localhost:3000";
+const API_ROOT = `${window.location.protocol}//${window.location.hostname}:${window.location.port}`;
 
 const getUrl = (relativeUrl, phenotypeId) =>
   `${API_ROOT}/phenotype/${phenotypeId}${relativeUrl}`;

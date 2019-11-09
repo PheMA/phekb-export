@@ -20,7 +20,7 @@ import DataTable from "./datatable";
 import FileViewer from "./filleviewer";
 import UserColumnManager from "./usercolumns";
 
-const api_prefix = require("./config.json").PHEKB_API_URL;
+const api_prefix = `${window.location.protocol}//${window.location.hostname}:${window.location.port}`;
 const list_path = `${api_prefix}/phenotype`;
 
 const cellRenderer = rowIndex => {

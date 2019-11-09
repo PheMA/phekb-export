@@ -4,9 +4,10 @@
   "main": "index.js",
   "scripts": {
     "start": "yarn run viewer",
-    "viewer": "concurrently --names \"API,UI\" \"nodemon --watch viewer/api -r ts-node/register viewer/api/index.ts\" \"parcel viewer/ui/index.html\"",
+    "viewer": "concurrently --names \"API,UI\" \"nodemon --watch viewer/api viewer/api/index.js\" \"parcel viewer/ui/index.html\"",
     "update-data": "rimraf ./data && yarn start",
-    "prod": "concurrently --names \"API,UI\" \"nodemon -r ts-node/register viewer/api/index.ts\" \"parcel serve viewer/ui/index.html\""
+    "build": "parcel build viewer/ui/index.html",
+    "prod": "node viewer/api/index.js"
   },
   "license": "MIT",
   "dependencies": {
