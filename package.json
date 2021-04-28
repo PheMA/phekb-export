@@ -28,7 +28,7 @@
     "express": "^4.17.1",
     "fetch-cookie": "^0.7.2",
     "json2csv": "^4.5.4",
-    "node-fetch": "^2.3.0",
+    "node-fetch": "^2.6.1",
     "nodemon": "^1.19.3",
     "normalize.css": "^8.0.1",
     "parcel": "^1.12.4",
